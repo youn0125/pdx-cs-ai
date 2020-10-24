@@ -9,17 +9,13 @@ import sys
 class Monopole:
 
     def __init__(self, num_monopoles, num_rooms):
-        self.pvars = set()
-        for i in range(int(num_monopoles)):
-            self.pvars.add(i+1)
-
-        self.rooms = [None] * int(num_rooms)
-        for i in range(int(num_rooms)):
-            self.rooms[i] = list()
+        self.pvars = list()
+        for i in reversed(range(int(num_monopoles))):
+            self.pvars.append(i+1)
 
         self.rooms_sum = [None] * int(num_rooms)
         for i in range(int(num_rooms)):
-            self.rooms_sum[i] = set()
+            self.rooms_sum[i] = list()
 
         self.num_rooms = int(num_rooms)
 
@@ -67,10 +63,15 @@ class Monopole:
             return vals
 
         # Recursive case:
-        v = pvars.pop(0)
+        v = pvars.pop()
         assert v not in vals
         for val in range(self.num_rooms):
+            # if len(vals) >= 1:
+            #     for k in vals.keys():
+            #         self.rooms_sum[val].append()
+
             vals[v] = val
+
             soln = self.solve(pvars=pvars, vals=vals)
             if soln:
                 return soln
