@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 # Monopoles solver using DFS
 # Mi Yon Kim
-
 import sys
-
 
 
 class Monopole:
@@ -22,7 +20,7 @@ class Monopole:
     def show(self, vals=dict()):
         print(vals)
 
-    def solve(self, pvars=None, vals=None):
+    def solve(self, pvars=None, vals=None, val_sum=None, val=None):
         # New solution attempt. Can't put these values
         # inline because bad things happen with Python's
         # evaluator.
@@ -30,28 +28,27 @@ class Monopole:
             pvars = list(self.pvars)
         if vals is None:
             vals = dict()
+        if val_sum is None:
+            val_sum = [None] * int(self.num_rooms)
+            for i in range(int(self.num_rooms)):
+                val_sum = list()
+        if val is None:
+            val = -1
 
         # Return True iff no constraint violations
         def ok():
-            # Return the value of the variable,
-            # or None if unvalued.
-            def value(var):
-                if var in vals:
-                    return vals[var]
-                return None
 
             if len(vals.values()) < 3:
                 return True
-            for r_num in range(self.num_rooms):
-                room = [monopole for monopole, r_n in vals.items() if r_n == r_num]
+            room = [monopole for monopole, r_n in vals.items() if r_n == val]
 
-                if len(room) <= 2:
-                    continue
-                for m1 in range(0, len(room)-1):
-                    for m2 in range(m1+1, len(room)):
-                        sum = room[m1] + room[m2]
-                        if sum in room:
-                            return False
+            if len(room) <= 2:
+                return True
+            for m1 in range(0, len(room)-1):
+                for m2 in range(m1+1, len(room)):
+                    sum = room[m1] + room[m2]
+                    if sum in room:
+                        return False
             return True
 
         # Base case: check for failure.
@@ -72,7 +69,7 @@ class Monopole:
 
             vals[v] = val
 
-            soln = self.solve(pvars=pvars, vals=vals)
+            soln = self.solve(pvars=pvars, vals=vals, val_sum=val_sum, val=val)
             if soln:
                 return soln
 
