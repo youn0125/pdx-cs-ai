@@ -1,29 +1,31 @@
 #!/usr/bin/python3
-# Monopoles solver using DFS
+# Get solution monopoles in each room using DFS
 # Mi Yon Kim
 import sys
 
-
+# Architecture referred from cry.py
+# https://github.com/pdx-cs-ai/crys/blob/main/crys.py
 class Monopole:
 
     def __init__(self, num_monopoles, num_rooms):
+        # Monopoles list to variables
         self.pvars = list()
         for i in reversed(range(int(num_monopoles))):
             self.pvars.append(i+1)
 
-        self.rooms_sum = [None] * int(num_rooms)
-        for i in range(int(num_rooms)):
-            self.rooms_sum[i] = list()
-
         self.num_rooms = int(num_rooms)
 
+    # Print out the solution monopoles in each room on a single line in increasing order.
     def show(self, vals=dict()):
-        print(vals)
+        for r in range(self.num_rooms):
+            room = [monopole for monopole, r_n in vals.items() if r_n == r]
+            for m in room:
+                print(m, end=" ")
+            print()
 
+    # Get solution monopoles in each room using DFS.
+    # pvars: The list of monopoles, vals: monopole(key):room number(value), val:room number
     def solve(self, pvars=None, vals=None, val=None):
-        # New solution attempt. Can't put these values
-        # inline because bad things happen with Python's
-        # evaluator.
         if pvars is None:
             pvars = list(self.pvars)
         if vals is None:
@@ -31,15 +33,18 @@ class Monopole:
         if val is None:
             val = -1
 
-        # Return True iff no constraint violations
+        # Return True iff no constraint violations.
         def ok():
-
+            # If there are below 3 elements in the vals, it is always true.
             if len(vals.values()) < 3:
                 return True
+            # Get monopole list in a val room.
             room = [monopole for monopole, r_n in vals.items() if r_n == val]
-
+            # If there are below 3 monopoles in the room, it is always true.
             if len(room) <= 2:
                 return True
+            # Check the room if it contains the sum of any two of monopole values
+            # If it contains, return false
             for m1 in range(0, len(room)-1):
                 for m2 in range(m1+1, len(room)):
                     sum = room[m1] + room[m2]
@@ -55,7 +60,7 @@ class Monopole:
         if not pvars:
             return vals
 
-        # Recursive case:
+        # Recursive case: try to extend partial assignment.
         v = pvars.pop()
         assert v not in vals
         for val in range(self.num_rooms):
@@ -72,10 +77,8 @@ class Monopole:
 
 
 monopole = Monopole(sys.argv[1], sys.argv[2])
-monopole.show()
 vals = monopole.solve()
 if vals is None:
     print("unsat")
 else:
     monopole.show(vals)
-
