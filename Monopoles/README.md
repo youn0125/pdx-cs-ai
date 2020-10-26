@@ -6,7 +6,7 @@ Mi Yon Kim / HW #1 - Monopoles
 This program gets solution monopoles in each room using a simple depth-first search.
 
 Things to do to develop this code.
-  * I debugged the crys.py(https://github.com/pdx-cs-ai/crys/blob/main/crys.py) to how I can adapt the architecture of crys.py to monodfs.py
+  * I reviewed the crys.py(https://github.com/pdx-cs-ai/crys/blob/main/crys.py) to how I can adapt the architecture of crys.py to monodfs.py
   * I focused on architecture, data structure, and the constraints.
   * From the linux box, 
     - The program got(./monodfs 8 2) the solution in 0.04s.
