@@ -13,7 +13,7 @@ Things to do to develop this code.
     - ./monodfs 9 2: unsat in 0.04s
     - ./monodfs 23 3: the solution in 0.06s
     - ./monodfs 24 3: unsat in 2s
-  * I am still trying to find an efficient way to improve the speed to get solution in a reasonable time when I increase the monopoles and the number of rooms.
+  * I am still trying to find an efficient way to improve the performance to get solution in a reasonable time when I increase the monopoles and the number of rooms.
    
 How to run the code:
   * ./monodfs m n, for example
