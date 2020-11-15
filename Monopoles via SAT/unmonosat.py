@@ -34,7 +34,7 @@ else:
 for n in solution:
     (r, c) = unlit(n)
     assert monopole_table[r-1][c] == None
-    monopole_table[r-1][c] = r-1
+    monopole_table[r-1][c] = r
 
 for c in range(num_of_rooms):
     print("Room ", c, end=": ")
