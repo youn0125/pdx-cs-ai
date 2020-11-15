@@ -10,7 +10,8 @@ from sys import stdin, stderr
 
 num_of_monopoles, num_of_rooms = int(sys.argv[1]), int(sys.argv[2])
 
-monopole_table = [[None]*num_of_monopoles for _ in range(num_of_rooms)]
+monopole_table = [[None]*num_of_rooms for _ in range(num_of_monopoles)]
+
 
 def unlit(b):
     b -= 1
