@@ -37,7 +37,7 @@ for n in solution:
     monopole_table[r-1][c] = r
 
 for c in range(num_of_rooms):
-    print("Room ", c, end=": ")
+    print("Room", c, end=": ")
     for r in range(num_of_monopoles):
         if monopole_table[r][c] is not None:
             print(monopole_table[r][c], end=", ")
