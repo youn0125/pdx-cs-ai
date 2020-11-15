@@ -36,8 +36,10 @@ for n in solution:
     assert monopole_table[r-1][c] == None
     monopole_table[r-1][c] = r-1
 
-for r in range(num_of_monopoles):
-    for c in range(num_of_rooms):
-        print(monopole_table[r][c], end="")
+for c in range(num_of_rooms):
+    print("Room ", c, end=": ")
+    for r in range(num_of_monopoles):
+        if monopole_table[r][c] is not None:
+            print(monopole_table[r][c], end=", ")
     print()
 
