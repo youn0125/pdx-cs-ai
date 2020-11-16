@@ -1,12 +1,15 @@
 #!/usr/bin/python3
-# Mi Yon Kim
-import sys
-# Create SAT problem in DIMACS format
+# Generate a SAT encoding for a Monopoles instance in DIMACS format
 # http://www.satcompetition.org/2009/format-benchmarks2009.html
-# to solve a Sudoku instance.
+# to solve a Monopoles instance.
+# Architecture referred from sudokugen.py
+# https://github.com/pdx-cs-ai/sudoku-sat-py/blob/master/sudokugen.py
+# Mi Yon Kim
+
+import sys
 
 # Given M monopoles and N rooms, return the atom
-# corresponding to atom[m][n]
+# corresponding to atom[m][n]. atom[m][n] stands for location of monopole.
 def atom(m, n):
     return num_of_monopoles * n + m + 1
 
@@ -17,7 +20,7 @@ clauses = []
 def clause(c):
     clauses.append(c)
 
-# Each monopole is placed:
+# Each monopole is placed in a room:
 for r in range(num_of_monopoles):
     clause([atom(r, c) for c in range(num_of_rooms)])
 
