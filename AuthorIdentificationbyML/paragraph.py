@@ -76,7 +76,7 @@ def process(novel):
 
 # Process all available novels.
 prefix = "hacked"
-for fn in os.listdir(prefix):
+for fn in sys.argv[1:]:
     with open(path.join(prefix, fn), "r", encoding="utf-8") as f_in:
         text = process(f_in)
         with open(fn, "w") as f_out:
