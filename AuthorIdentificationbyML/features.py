@@ -1,17 +1,27 @@
 import os, sys
-from os import path
+
+class Bow:
+    def __init__(self, fname):
+        if "austen" in fname:
+            self.auClass = 0
+        elif "shelley" in fname:
+            self.auClass = 1
+        else:
+            self.auClass = None
+        self.paragraph_cnt = 0
+        self.words = dict()
+
 def alphas(w):
     return ''.join([c for c in w if c.lower() >= 'a' and c.lower() <= 'z'])
 
 allwords = set()
-prefix = ""
 for fname in sys.argv[1:]:
-    with open(path.join(prefix, fname), "r", encoding="utf-8") as f_in:
+    with open(fname, "r", encoding='UTF-8') as f_in:
         text = f_in.read()
         words = text.split()
         for w in words:
             aw = alphas(w)
-            if len(aw) <= 1:
+            if len(aw) > 1:
                 allwords.add(aw)
 
 
