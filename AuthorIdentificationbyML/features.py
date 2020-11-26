@@ -1,4 +1,4 @@
-import os, sys
+import os, re, sys
 
 class Bow:
     def __init__(self, fname):
@@ -12,17 +12,17 @@ class Bow:
         self.words = dict()
 
 def alphas(w):
-    return ''.join([c for c in w if c.lower() >= 'a' and c.lower() <= 'z'])
+    return ''.join([c for c in w if (c.lower() >= 'a' and c.lower() <= 'z') or c == '\n'])
 
-allwords = set()
+allwords = list()
 for fname in sys.argv[1:]:
     with open(fname, "r", encoding='UTF-8') as f_in:
         text = f_in.read()
-        words = text.split()
+        words = re.findall(r'\S+|\n', text)
         for w in words:
             aw = alphas(w)
             if len(aw) > 1:
-                allwords.add(aw)
+                allwords.append(aw)
 
 
 print(len(allwords))

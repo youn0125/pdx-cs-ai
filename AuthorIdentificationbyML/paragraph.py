@@ -9,75 +9,48 @@ punct = re.compile("[^-' a-zA-Z]+")
 dash = re.compile("--")
 possess = re.compile("'s")
 
+
+class Bow:
+    def __init__(self, fname):
+        if "austen" in fname:
+            self.auClass = 0
+        elif "shelley" in fname:
+            self.auClass = 1
+        else:
+            self.auClass = None
+        self.paragraph_cnt = 1
+        self.wordsDic = defaultdict(set)
+
+def alphas(w):
+    return ''.join([c for c in w if (c.lower() >= 'a' and c.lower() <= 'z') or c == '\n'])
+
+bowList = list()
+
 # novel should be an iterable text object.  Returns the
 # processed text of novel as a string.
 def process(novel):
+
+    bowObj = Bow(novel.name)
+
     # List of paragraphs. Each paragraph is a list of string
     # lines, not newline-terminated.
-    pars = list()
+
 
     # Accumulate paragraphs, filtering out extraneous lines.
     par = list()
     for line in novel:
         words = line.split()
-        if not words or words[0] in {
-                "CHAPTER",
-                "VOL.",
-                "VOLUME",
-                "Letter",
-                "Chapter",
-        }:
-            if par and len(par) > 1:
-                pars.append(par)
-            par = list()
+        if not words:
+            if bowObj.wordsDic[bowObj.paragraph_cnt] and len(bowObj.wordsDic[bowObj.paragraph_cnt]) > 1:
+                bowObj.paragraph_cnt += 1
             continue
-        par.append(line)
-    if par and len(par) > 1:
-        pars.append(par)
+        for w in words:
+            bowObj.wordsDic[bowObj.paragraph_cnt].add(w)
 
-    # Accumulate names by count of occurrences.
-    pnames = defaultdict(int)
-    for p in pars:
-        text = ' '.join(p)
-        for g in name.finditer(text):
-            w = g.group(1)
-            if len(w) > 2:
-                pnames[w] += 1
-
-    # Construct the set of names.
-    propnames = {n for n in pnames if pnames[n] >= 2}
-    propnames -= {
-        "Lady",
-        "Lord",
-        "Madam",
-        "Madame",
-        "Miss",
-        "Mr",
-        "Mrs",
-        "Sir",
-        "The",
-    }
-
-    # Substitute names.
-    def clean_names(line):
-        matches = {str(m.group(0)) for m in justname.finditer(line)}
-        for m in matches:
-            if m in propnames:
-                line = line.replace(m, "—")
-        return line
-
-    # Build up the paragraphs with the names cleaned.
-    return "\n".join([
-        ''.join([
-            clean_names(l) for l in p
-        ])
-        for p in pars
-    ])
+    bowList.append(bowObj)
 
 # Process all available novels.
-prefix = "hacked"
-for fn in os.listdir(prefix):
-    with open(path.join(prefix, fn), "r", encoding='UTF-8') as f_in:
-        text = process(f_in)
-        with open(fn, "w", encoding='UTF-8') as f_out:
-            f_out.write(text)
+for fn in sys.argv[1:]:
+    with open(fn, "r", encoding='UTF-8') as f_in:
+        process(f_in)
+
