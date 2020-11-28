@@ -23,7 +23,9 @@ def process(novel):
     par_cnt = 1
     # "p" stands for paragraph
     par["p"] = par_cnt
+    par["t"] = novel.name.replace(".txt","")
     novel_class = par["c"]
+    novel_title = par["t"]
 
     for line in novel:
         words = line.split()
@@ -34,6 +36,7 @@ def process(novel):
                 par_cnt += 1
                 par["p"] = par_cnt
                 par["c"] = novel_class
+                par["t"] = novel_title
         for w in words:
             aw = alphas(w)
             features.add(aw)
@@ -89,6 +92,17 @@ for f in features:
 
 top_feat = nlargest(300, gains, key=gains.get)
 print(top_feat)
+
+instances = list()
+for par in pars:
+    inst = list()
+    inst.append(par["t"] + "." + str(par["p"]))
+    for f in top_feat:
+        inst.append(par[f])
+    instances.append(inst)
+
+with open("features.csv", "w", encoding="utf-8") as f_out:
+    f_out.write("\n".join([','.join([str(f) for f in i]) for i in instances]))
 
 
 
