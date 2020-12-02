@@ -2,16 +2,19 @@ import math, os, re, sys
 from collections import defaultdict
 from heapq import nlargest
 
+# return only alphabets in the word
 def alphas(w):
     return ''.join([c for c in w if c.lower() >= 'a' and c.lower() <= 'z'])
 
 # List of paragraphs.
 pars = list()
+# set of features
 features = set()
 # novel should be an iterable text object.  Returns the
-# processed text of novel as a string.
-def process(novel):
-    # Accumulate paragraphs, filtering out extraneous lines.
+# list of paragraph containing dictionary of each paragraph
+# Each paragraph(word:0 or 1) contains paragraph number, title,
+# class(austen:0, shelly:1), and features(word:1)
+def create_pars(novel):
     par = defaultdict(int)
     # "c" stands for class
     if "austen" in novel.name:
@@ -21,7 +24,7 @@ def process(novel):
     else:
         par["c"] = 2
     par_cnt = 1
-    # "p" stands for paragraph
+    # "p":paragraph and "t":title
     par["p"] = par_cnt
     par["t"] = novel.name.replace(".txt","")
     novel_class = par["c"]
@@ -63,16 +66,17 @@ def entropy(insts):
 
     return -pr_p * math.log2(pr_p) - pr_n * math.log2(pr_n)
 
-# Process all available novels.
+# Create list of paragraph with all available novels.
+# Create bag of words(features) as a set.
 for fn in sys.argv[1:]:
     with open(fn, "r", encoding='UTF-8') as f_in:
-        process(f_in)
-print(len(features))
-print(list(features)[:10])
+        create_pars(f_in)
+
 # Gain-Based feature selection
+# Create dictionary for gains(feature:gain)
 gains = defaultdict()
+# class entropy
 c_entropy = entropy(pars)
-print(c_entropy)
 # Get gain for each feature
 for f in features:
     inst0 = list()
@@ -90,9 +94,11 @@ for f in features:
     g = c_entropy - uprime
     gains[f] = g
 
+# Get only 300 largest gains from the gains
 top_feat = nlargest(300, gains, key=gains.get)
-print(top_feat)
 
+# Emit comma-separated line with paragraph identifier
+# instances means a list of paragraph
 instances = list()
 for par in pars:
     inst = list()
@@ -101,6 +107,7 @@ for par in pars:
         inst.append(par[f])
     instances.append(inst)
 
+# write to features.csv
 with open("features.csv", "w", encoding="utf-8") as f_out:
     f_out.write("\n".join([','.join([str(f) for f in i]) for i in instances]))
 
