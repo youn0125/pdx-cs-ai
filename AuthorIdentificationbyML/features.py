@@ -110,5 +110,5 @@ for par in pars:
     instances.append(inst)
 
 # write to features.csv
-with open("features_3.csv", "w", encoding="utf-8") as f_out:
+with open("features.csv", "w", encoding="utf-8") as f_out:
     f_out.write("\n".join([','.join([str(f) for f in i]) for i in instances]))
