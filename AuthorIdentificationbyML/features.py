@@ -16,19 +16,19 @@ features = set()
 # class(austen:0, shelly:1), and features(word:1)
 def create_pars(novel):
     par = defaultdict(int)
-    # "c" stands for class
+    # "*" stands for class
     if "austen" in novel.name:
-        par["c"] = 0
+        par["*"] = 0
     elif "shelley" in novel.name:
-        par["c"] = 1
+        par["*"] = 1
     else:
-        par["c"] = 2
+        par["*"] = 2
     par_cnt = 1
-    # "p":paragraph and "t":title
-    par["p"] = par_cnt
-    par["t"] = novel.name.replace(".txt","")
-    novel_class = par["c"]
-    novel_title = par["t"]
+    # "&":paragraph and "#":title
+    par["&"] = par_cnt
+    par["#"] = novel.name.replace(".txt","")
+    novel_class = par["*"]
+    novel_title = par["#"]
 
     for line in novel:
         words = line.split()
@@ -37,9 +37,9 @@ def create_pars(novel):
                 pars.append(par)
                 par = defaultdict(int)
                 par_cnt += 1
-                par["p"] = par_cnt
-                par["c"] = novel_class
-                par["t"] = novel_title
+                par["&"] = par_cnt
+                par["*"] = novel_class
+                par["#"] = novel_title
         for w in words:
             aw = alphas(w)
             features.add(aw)
@@ -50,7 +50,7 @@ def count_labels(insts):
 
     np = 0
     for i in insts:
-        np += i["c"]
+        np += i["*"]
 
     return np, ninsts - np
 
@@ -102,11 +102,13 @@ top_feat = nlargest(300, gains, key=gains.get)
 instances = list()
 for par in pars:
     inst = list()
-    inst.append(par["t"] + "." + str(par["p"]))
+    inst.append(par["#"] + "." + str(par["&"]))
+    inst.append(par["*"])
     for f in top_feat:
         inst.append(par[f])
+    print(len(inst))
     instances.append(inst)
 
 # write to features.csv
-with open("features.csv", "w", encoding="utf-8") as f_out:
+with open("features_3.csv", "w", encoding="utf-8") as f_out:
     f_out.write("\n".join([','.join([str(f) for f in i]) for i in instances]))
