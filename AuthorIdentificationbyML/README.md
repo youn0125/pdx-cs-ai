@@ -1,5 +1,5 @@
 
-#features : Emit comma-separated line with paragraph identifier
+#HW3 – Author Identification by Machine Learning
 CS 441/541 Fall 2020 class
 
 Mi Yon Kim / HW #3 - Author Identification by Machine Learning
