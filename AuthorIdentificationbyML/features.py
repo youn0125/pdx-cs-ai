@@ -106,7 +106,6 @@ for par in pars:
     inst.append(par["*"])
     for f in top_feat:
         inst.append(par[f])
-    print(len(inst))
     instances.append(inst)
 
 # write to features.csv
